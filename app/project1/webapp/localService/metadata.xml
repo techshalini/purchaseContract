@@ -1,0 +1,515 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml">
+        <edmx:Include Alias="Capabilities" Namespace="Org.OData.Capabilities.V1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+        <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+        <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Measures.V1.xml">
+        <edmx:Include Alias="Measures" Namespace="Org.OData.Measures.V1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+        <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema Namespace="MyService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <EntityContainer Name="EntityContainer">
+                <EntitySet Name="EKKO" EntityType="MyService.EKKO">
+                    <NavigationPropertyBinding Path="Currency" Target="Currencies"/>
+                    <NavigationPropertyBinding Path="PurchaseOrder" Target="PurchaseOrders"/>
+                </EntitySet>
+                <EntitySet Name="EKPO" EntityType="MyService.EKPO">
+                    <NavigationPropertyBinding Path="PurchaseOrderItem" Target="PurchaseOrders"/>
+                </EntitySet>
+                <EntitySet Name="PurchaseOrders" EntityType="MyService.PurchaseOrders"/>
+                <EntitySet Name="PurchaseOrderItems" EntityType="MyService.PurchaseOrderItems"/>
+                <EntitySet Name="Currencies" EntityType="MyService.Currencies">
+                    <NavigationPropertyBinding Path="texts" Target="Currencies_texts"/>
+                    <NavigationPropertyBinding Path="localized" Target="Currencies_texts"/>
+                </EntitySet>
+                <EntitySet Name="Currencies_texts" EntityType="MyService.Currencies_texts"/>
+            </EntityContainer>
+            <EntityType Name="EKKO">
+                <Property Name="Comp_Code" Type="Edm.String"/>
+                <Property Name="Doc_Type" Type="Edm.String"/>
+                <Property Name="Vendor" Type="Edm.String"/>
+                <Property Name="Lang" Type="Edm.String"/>
+                <Property Name="Pur_Org" Type="Edm.String"/>
+                <Property Name="Pur_Group" Type="Edm.String"/>
+                <NavigationProperty Name="Currency" Type="MyService.Currencies">
+                    <ReferentialConstraint Property="Currency_code" ReferencedProperty="code"/>
+                </NavigationProperty>
+                <Property Name="Currency_code" Type="Edm.String" MaxLength="3"/>
+                <Property Name="Vper_start" Type="Edm.String"/>
+                <Property Name="Vper_end" Type="Edm.String"/>
+                <NavigationProperty Name="PurchaseOrder" Type="MyService.PurchaseOrders">
+                    <ReferentialConstraint Property="PurchaseOrder_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <Property Name="PurchaseOrder_ID" Type="Edm.String" MaxLength="10"/>
+            </EntityType>
+            <EntityType Name="EKPO">
+                <Key>
+                    <PropertyRef Name="item_no"/>
+                </Key>
+                <Property Name="item_no" Type="Edm.String" Nullable="false"/>
+                <Property Name="Material" Type="Edm.String"/>
+                <Property Name="Plant" Type="Edm.String"/>
+                <Property Name="Stge_Loc" Type="Edm.String"/>
+                <Property Name="Quantity" Type="Edm.String"/>
+                <Property Name="PO_Unit" Type="Edm.String"/>
+                <Property Name="Net_Price" Type="Edm.String"/>
+                <Property Name="order_un_iso" Type="Edm.String"/>
+                <Property Name="condition" Type="Edm.String"/>
+                <NavigationProperty Name="PurchaseOrderItem" Type="MyService.PurchaseOrders">
+                    <ReferentialConstraint Property="PurchaseOrderItem_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <Property Name="PurchaseOrderItem_ID" Type="Edm.String" MaxLength="10"/>
+            </EntityType>
+            <EntityType Name="PurchaseOrders">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.String" MaxLength="10" Nullable="false"/>
+                <Property Name="CompanyCode" Type="Edm.String" MaxLength="4" Nullable="false"/>
+                <Property Name="PurchasingDocumentOrigin" Type="Edm.String" MaxLength="1" Nullable="false"/>
+                <Property Name="Supplier" Type="Edm.String" MaxLength="10" Nullable="false"/>
+                <Property Name="Language" Type="Edm.String" MaxLength="2" Nullable="false"/>
+                <Property Name="PurchasingOrganization" Type="Edm.String" MaxLength="4" Nullable="false"/>
+                <Property Name="PurchasingGroup" Type="Edm.String" MaxLength="3" Nullable="false"/>
+                <Property Name="DocumentCurrency" Type="Edm.String" MaxLength="3" Nullable="false"/>
+                <Property Name="ValidityStartDate" Type="Edm.Date"/>
+                <Property Name="ValidityEndDate" Type="Edm.Date"/>
+            </EntityType>
+            <EntityType Name="PurchaseOrderItems">
+                <Property Name="Material" Type="Edm.String" MaxLength="18" Nullable="false"/>
+                <Property Name="Plant" Type="Edm.String" MaxLength="4" Nullable="false"/>
+                <Property Name="StorageLocation" Type="Edm.String" MaxLength="4" Nullable="false"/>
+                <Property Name="OrderQuantity" Type="Edm.Decimal" Scale="3" Precision="13" Nullable="false"/>
+                <Property Name="OrderPriceUnit" Type="Edm.String" MaxLength="3" Nullable="false"/>
+                <Property Name="NetPriceAmount" Type="Edm.Decimal" Precision="11" Nullable="false"/>
+            </EntityType>
+            <EntityType Name="Currencies">
+                <Key>
+                    <PropertyRef Name="code"/>
+                </Key>
+                <Property Name="name" Type="Edm.String" MaxLength="255"/>
+                <Property Name="descr" Type="Edm.String" MaxLength="1000"/>
+                <Property Name="code" Type="Edm.String" MaxLength="3" Nullable="false"/>
+                <Property Name="symbol" Type="Edm.String" MaxLength="5"/>
+                <Property Name="minorUnit" Type="Edm.Int16"/>
+                <NavigationProperty Name="texts" Type="Collection(MyService.Currencies_texts)">
+                    <OnDelete Action="Cascade"/>
+                </NavigationProperty>
+                <NavigationProperty Name="localized" Type="MyService.Currencies_texts">
+                    <ReferentialConstraint Property="code" ReferencedProperty="code"/>
+                </NavigationProperty>
+            </EntityType>
+            <EntityType Name="Currencies_texts">
+                <Key>
+                    <PropertyRef Name="locale"/>
+                    <PropertyRef Name="code"/>
+                </Key>
+                <Property Name="locale" Type="Edm.String" MaxLength="14" Nullable="false"/>
+                <Property Name="name" Type="Edm.String" MaxLength="255"/>
+                <Property Name="descr" Type="Edm.String" MaxLength="1000"/>
+                <Property Name="code" Type="Edm.String" MaxLength="3" Nullable="false"/>
+            </EntityType>
+            <Annotations Target="MyService.EKKO/Currency">
+                <Annotation Term="Common.Label" String="{i18n>Currency}"/>
+                    <Annotation Term="Core.Description" String="{i18n>CurrencyCode.Description}"/>
+                    </Annotations>
+                    <Annotations Target="MyService.EKKO/Currency_code">
+                        <Annotation Term="Common.Label" String="{i18n>Currency}"/>
+                            <Annotation Term="Common.ValueList">
+                                <Record Type="Common.ValueListType">
+                                    <PropertyValue Property="Label" String="{i18n>Currency}"/>
+                                        <PropertyValue Property="CollectionPath" String="Currencies"/>
+                                        <PropertyValue Property="Parameters">
+                                            <Collection>
+                                                <Record Type="Common.ValueListParameterInOut">
+                                                    <PropertyValue Property="LocalDataProperty" PropertyPath="Currency_code"/>
+                                                    <PropertyValue Property="ValueListProperty" String="code"/>
+                                                </Record>
+                                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                                    <PropertyValue Property="ValueListProperty" String="name"/>
+                                                </Record>
+                                            </Collection>
+                                        </PropertyValue>
+                                    </Record>
+                                </Annotation>
+                                <Annotation Term="Core.Description" String="{i18n>CurrencyCode.Description}"/>
+                                </Annotations>
+                                <Annotations Target="MyService.PurchaseOrders">
+                                    <Annotation Term="Common.Label" String="Purchase Order"/>
+                                    <Annotation Term="Common.SemanticKey">
+                                        <Collection>
+                                            <PropertyPath>PurchaseOrder</PropertyPath>
+                                        </Collection>
+                                    </Annotation>
+                                    <Annotation Term="Common.Messages" Path="SAP__Messages"/>
+                                </Annotations>
+                                <Annotations Target="MyService.EntityContainer/PurchaseOrders">
+                                    <Annotation Term="Capabilities.NavigationRestrictions">
+                                        <Record Type="Capabilities.NavigationRestrictionsType">
+                                            <PropertyValue Property="RestrictedProperties">
+                                                <Collection>
+                                                    <Record Type="Capabilities.NavigationPropertyRestriction">
+                                                        <PropertyValue Property="NavigationProperty" NavigationPropertyPath="_PurchaseOrderItem"/>
+                                                        <PropertyValue Property="InsertRestrictions">
+                                                            <Record Type="Capabilities.InsertRestrictionsType">
+                                                                <PropertyValue Property="Insertable" Bool="true"/>
+                                                            </Record>
+                                                        </PropertyValue>
+                                                    </Record>
+                                                    <Record Type="Capabilities.NavigationPropertyRestriction">
+                                                        <PropertyValue Property="NavigationProperty" NavigationPropertyPath="_PurchaseOrderNote"/>
+                                                        <PropertyValue Property="InsertRestrictions">
+                                                            <Record Type="Capabilities.InsertRestrictionsType">
+                                                                <PropertyValue Property="Insertable" Bool="true"/>
+                                                            </Record>
+                                                        </PropertyValue>
+                                                    </Record>
+                                                    <Record Type="Capabilities.NavigationPropertyRestriction">
+                                                        <PropertyValue Property="NavigationProperty" NavigationPropertyPath="_SupplierAddress"/>
+                                                        <PropertyValue Property="InsertRestrictions">
+                                                            <Record Type="Capabilities.InsertRestrictionsType">
+                                                                <PropertyValue Property="Insertable" Bool="true"/>
+                                                            </Record>
+                                                        </PropertyValue>
+                                                    </Record>
+                                                </Collection>
+                                            </PropertyValue>
+                                        </Record>
+                                    </Annotation>
+                                    <Annotation Term="Capabilities.SearchRestrictions">
+                                        <Record Type="Capabilities.SearchRestrictionsType">
+                                            <PropertyValue Property="Searchable" Bool="false"/>
+                                        </Record>
+                                    </Annotation>
+                                    <Annotation Term="Capabilities.FilterRestrictions">
+                                        <Record Type="Capabilities.FilterRestrictionsType">
+                                            <PropertyValue Property="FilterExpressionRestrictions">
+                                                <Collection>
+                                                    <Record Type="Capabilities.FilterExpressionRestrictionType">
+                                                        <PropertyValue Property="Property" PropertyPath="DownPaymentAmount"/>
+                                                        <PropertyValue Property="AllowedExpressions" String="MultiValue"/>
+                                                    </Record>
+                                                </Collection>
+                                            </PropertyValue>
+                                        </Record>
+                                    </Annotation>
+                                    <Annotation Term="Capabilities.UpdateRestrictions">
+                                        <Record Type="Capabilities.UpdateRestrictionsType">
+                                            <PropertyValue Property="QueryOptions">
+                                                <Record Type="Capabilities.ModificationQueryOptionsType">
+                                                    <PropertyValue Property="SelectSupported" Bool="true"/>
+                                                </Record>
+                                            </PropertyValue>
+                                        </Record>
+                                    </Annotation>
+                                </Annotations>
+                                <Annotations Target="MyService.PurchaseOrders/ID">
+                                    <Annotation Term="Core.Computed" Bool="true"/>
+                                    <Annotation Term="Common.IsUpperCase" Bool="true"/>
+                                    <Annotation Term="Common.Label" String="Purchase Order"/>
+                                    <Annotation Term="Common.Heading" String="Purchase Order Number"/>
+                                    <Annotation Term="Common.QuickInfo" String="Purchase Order Number"/>
+                                </Annotations>
+                                <Annotations Target="MyService.PurchaseOrders/CompanyCode">
+                                    <Annotation Term="Common.IsUpperCase" Bool="true"/>
+                                    <Annotation Term="Common.Label" String="Company Code"/>
+                                    <Annotation Term="Common.Heading" String="CoCd"/>
+                                </Annotations>
+                                <Annotations Target="MyService.PurchaseOrders/PurchasingDocumentOrigin">
+                                    <Annotation Term="Core.Computed" Bool="true"/>
+                                    <Annotation Term="Common.IsUpperCase" Bool="true"/>
+                                    <Annotation Term="Common.Label" String="Status"/>
+                                    <Annotation Term="Common.Heading" String="S"/>
+                                    <Annotation Term="Common.QuickInfo" String="Status of Purchasing Document"/>
+                                </Annotations>
+                                <Annotations Target="MyService.PurchaseOrders/Supplier">
+                                    <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+                                    <Annotation Term="Common.IsUpperCase" Bool="true"/>
+                                    <Annotation Term="Common.Label" String="Supplier"/>
+                                </Annotations>
+                                <Annotations Target="MyService.PurchaseOrders/Language">
+                                    <Annotation Term="Common.Label" String="Language Key"/>
+                                    <Annotation Term="Common.Heading" String="Language"/>
+                                </Annotations>
+                                <Annotations Target="MyService.PurchaseOrders/PurchasingOrganization">
+                                    <Annotation Term="Common.IsUpperCase" Bool="true"/>
+                                    <Annotation Term="Common.Label" String="Purch. Organization"/>
+                                    <Annotation Term="Common.Heading" String="POrg"/>
+                                    <Annotation Term="Common.QuickInfo" String="Purchasing Organization"/>
+                                </Annotations>
+                                <Annotations Target="MyService.PurchaseOrders/PurchasingGroup">
+                                    <Annotation Term="Common.SAPObjectNodeTypeReference" String="PurchasingGroup"/>
+                                    <Annotation Term="Common.IsUpperCase" Bool="true"/>
+                                    <Annotation Term="Common.Label" String="Purchasing Group"/>
+                                    <Annotation Term="Common.Heading" String="PGr"/>
+                                </Annotations>
+                                <Annotations Target="MyService.PurchaseOrders/DocumentCurrency">
+                                    <Annotation Term="Common.SAPObjectNodeTypeReference" String="Currency"/>
+                                    <Annotation Term="Common.IsCurrency" Bool="true"/>
+                                    <Annotation Term="Common.IsUpperCase" Bool="true"/>
+                                    <Annotation Term="Common.Label" String="Currency"/>
+                                    <Annotation Term="Common.Heading" String="Crcy"/>
+                                    <Annotation Term="Common.QuickInfo" String="Currency Key"/>
+                                </Annotations>
+                                <Annotations Target="MyService.PurchaseOrders/ValidityStartDate">
+                                    <Annotation Term="Common.Label" String="Validity Per. Start"/>
+                                    <Annotation Term="Common.Heading" String="VP Start"/>
+                                    <Annotation Term="Common.QuickInfo" String="Start of Validity Period"/>
+                                </Annotations>
+                                <Annotations Target="MyService.PurchaseOrders/ValidityEndDate">
+                                    <Annotation Term="Common.Label" String="Validity Period End"/>
+                                    <Annotation Term="Common.Heading" String="VPer.End"/>
+                                    <Annotation Term="Common.QuickInfo" String="End of Validity Period"/>
+                                </Annotations>
+                                <Annotations Target="MyService.PurchaseOrderItems">
+                                    <Annotation Term="Common.Label" String="Purchase Order Item"/>
+                                    <Annotation Term="Common.Messages" Path="SAP__Messages"/>
+                                </Annotations>
+                                <Annotations Target="MyService.EntityContainer/PurchaseOrderItems">
+                                    <Annotation Term="Capabilities.NavigationRestrictions">
+                                        <Record Type="Capabilities.NavigationRestrictionsType">
+                                            <PropertyValue Property="RestrictedProperties">
+                                                <Collection>
+                                                    <Record Type="Capabilities.NavigationPropertyRestriction">
+                                                        <PropertyValue Property="NavigationProperty" NavigationPropertyPath="_DeliveryAddress"/>
+                                                        <PropertyValue Property="InsertRestrictions">
+                                                            <Record Type="Capabilities.InsertRestrictionsType">
+                                                                <PropertyValue Property="Insertable" Bool="true"/>
+                                                            </Record>
+                                                        </PropertyValue>
+                                                    </Record>
+                                                    <Record Type="Capabilities.NavigationPropertyRestriction">
+                                                        <PropertyValue Property="NavigationProperty" NavigationPropertyPath="_PurchaseOrderInvoicingPlan"/>
+                                                        <PropertyValue Property="InsertRestrictions">
+                                                            <Record Type="Capabilities.InsertRestrictionsType">
+                                                                <PropertyValue Property="Insertable" Bool="true"/>
+                                                            </Record>
+                                                        </PropertyValue>
+                                                    </Record>
+                                                    <Record Type="Capabilities.NavigationPropertyRestriction">
+                                                        <PropertyValue Property="NavigationProperty" NavigationPropertyPath="_PurchaseOrderItemNote"/>
+                                                        <PropertyValue Property="InsertRestrictions">
+                                                            <Record Type="Capabilities.InsertRestrictionsType">
+                                                                <PropertyValue Property="Insertable" Bool="true"/>
+                                                            </Record>
+                                                        </PropertyValue>
+                                                    </Record>
+                                                    <Record Type="Capabilities.NavigationPropertyRestriction">
+                                                        <PropertyValue Property="NavigationProperty" NavigationPropertyPath="_PurchaseOrderScheduleLineTP"/>
+                                                        <PropertyValue Property="InsertRestrictions">
+                                                            <Record Type="Capabilities.InsertRestrictionsType">
+                                                                <PropertyValue Property="Insertable" Bool="true"/>
+                                                            </Record>
+                                                        </PropertyValue>
+                                                    </Record>
+                                                    <Record Type="Capabilities.NavigationPropertyRestriction">
+                                                        <PropertyValue Property="NavigationProperty" NavigationPropertyPath="_PurOrdAccountAssignment"/>
+                                                        <PropertyValue Property="InsertRestrictions">
+                                                            <Record Type="Capabilities.InsertRestrictionsType">
+                                                                <PropertyValue Property="Insertable" Bool="true"/>
+                                                            </Record>
+                                                        </PropertyValue>
+                                                    </Record>
+                                                    <Record Type="Capabilities.NavigationPropertyRestriction">
+                                                        <PropertyValue Property="NavigationProperty" NavigationPropertyPath="_PurOrdPricingElement"/>
+                                                        <PropertyValue Property="InsertRestrictions">
+                                                            <Record Type="Capabilities.InsertRestrictionsType">
+                                                                <PropertyValue Property="Insertable" Bool="true"/>
+                                                            </Record>
+                                                        </PropertyValue>
+                                                    </Record>
+                                                </Collection>
+                                            </PropertyValue>
+                                        </Record>
+                                    </Annotation>
+                                    <Annotation Term="Capabilities.SearchRestrictions">
+                                        <Record Type="Capabilities.SearchRestrictionsType">
+                                            <PropertyValue Property="Searchable" Bool="false"/>
+                                        </Record>
+                                    </Annotation>
+                                    <Annotation Term="Capabilities.InsertRestrictions">
+                                        <Record Type="Capabilities.InsertRestrictionsType">
+                                            <PropertyValue Property="Insertable" Bool="false"/>
+                                        </Record>
+                                    </Annotation>
+                                    <Annotation Term="Capabilities.FilterRestrictions">
+                                        <Record Type="Capabilities.FilterRestrictionsType">
+                                            <PropertyValue Property="FilterExpressionRestrictions">
+                                                <Collection>
+                                                    <Record Type="Capabilities.FilterExpressionRestrictionType">
+                                                        <PropertyValue Property="Property" PropertyPath="ProductPurchasePointsQty"/>
+                                                        <PropertyValue Property="AllowedExpressions" String="MultiValue"/>
+                                                    </Record>
+                                                    <Record Type="Capabilities.FilterExpressionRestrictionType">
+                                                        <PropertyValue Property="Property" PropertyPath="NetPriceQuantity"/>
+                                                        <PropertyValue Property="AllowedExpressions" String="MultiValue"/>
+                                                    </Record>
+                                                    <Record Type="Capabilities.FilterExpressionRestrictionType">
+                                                        <PropertyValue Property="Property" PropertyPath="NetAmount"/>
+                                                        <PropertyValue Property="AllowedExpressions" String="MultiValue"/>
+                                                    </Record>
+                                                    <Record Type="Capabilities.FilterExpressionRestrictionType">
+                                                        <PropertyValue Property="Property" PropertyPath="GrossAmount"/>
+                                                        <PropertyValue Property="AllowedExpressions" String="MultiValue"/>
+                                                    </Record>
+                                                    <Record Type="Capabilities.FilterExpressionRestrictionType">
+                                                        <PropertyValue Property="Property" PropertyPath="EffectiveAmount"/>
+                                                        <PropertyValue Property="AllowedExpressions" String="MultiValue"/>
+                                                    </Record>
+                                                    <Record Type="Capabilities.FilterExpressionRestrictionType">
+                                                        <PropertyValue Property="Property" PropertyPath="Subtotal1Amount"/>
+                                                        <PropertyValue Property="AllowedExpressions" String="MultiValue"/>
+                                                    </Record>
+                                                    <Record Type="Capabilities.FilterExpressionRestrictionType">
+                                                        <PropertyValue Property="Property" PropertyPath="Subtotal2Amount"/>
+                                                        <PropertyValue Property="AllowedExpressions" String="MultiValue"/>
+                                                    </Record>
+                                                    <Record Type="Capabilities.FilterExpressionRestrictionType">
+                                                        <PropertyValue Property="Property" PropertyPath="Subtotal3Amount"/>
+                                                        <PropertyValue Property="AllowedExpressions" String="MultiValue"/>
+                                                    </Record>
+                                                    <Record Type="Capabilities.FilterExpressionRestrictionType">
+                                                        <PropertyValue Property="Property" PropertyPath="Subtotal4Amount"/>
+                                                        <PropertyValue Property="AllowedExpressions" String="MultiValue"/>
+                                                    </Record>
+                                                    <Record Type="Capabilities.FilterExpressionRestrictionType">
+                                                        <PropertyValue Property="Property" PropertyPath="Subtotal5Amount"/>
+                                                        <PropertyValue Property="AllowedExpressions" String="MultiValue"/>
+                                                    </Record>
+                                                    <Record Type="Capabilities.FilterExpressionRestrictionType">
+                                                        <PropertyValue Property="Property" PropertyPath="Subtotal6Amount"/>
+                                                        <PropertyValue Property="AllowedExpressions" String="MultiValue"/>
+                                                    </Record>
+                                                    <Record Type="Capabilities.FilterExpressionRestrictionType">
+                                                        <PropertyValue Property="Property" PropertyPath="OrderQuantity"/>
+                                                        <PropertyValue Property="AllowedExpressions" String="MultiValue"/>
+                                                    </Record>
+                                                    <Record Type="Capabilities.FilterExpressionRestrictionType">
+                                                        <PropertyValue Property="Property" PropertyPath="NetPriceAmount"/>
+                                                        <PropertyValue Property="AllowedExpressions" String="MultiValue"/>
+                                                    </Record>
+                                                    <Record Type="Capabilities.FilterExpressionRestrictionType">
+                                                        <PropertyValue Property="Property" PropertyPath="ItemVolume"/>
+                                                        <PropertyValue Property="AllowedExpressions" String="MultiValue"/>
+                                                    </Record>
+                                                    <Record Type="Capabilities.FilterExpressionRestrictionType">
+                                                        <PropertyValue Property="Property" PropertyPath="ItemGrossWeight"/>
+                                                        <PropertyValue Property="AllowedExpressions" String="MultiValue"/>
+                                                    </Record>
+                                                    <Record Type="Capabilities.FilterExpressionRestrictionType">
+                                                        <PropertyValue Property="Property" PropertyPath="ItemNetWeight"/>
+                                                        <PropertyValue Property="AllowedExpressions" String="MultiValue"/>
+                                                    </Record>
+                                                    <Record Type="Capabilities.FilterExpressionRestrictionType">
+                                                        <PropertyValue Property="Property" PropertyPath="NonDeductibleInputTaxAmount"/>
+                                                        <PropertyValue Property="AllowedExpressions" String="MultiValue"/>
+                                                    </Record>
+                                                    <Record Type="Capabilities.FilterExpressionRestrictionType">
+                                                        <PropertyValue Property="Property" PropertyPath="DownPaymentAmount"/>
+                                                        <PropertyValue Property="AllowedExpressions" String="MultiValue"/>
+                                                    </Record>
+                                                    <Record Type="Capabilities.FilterExpressionRestrictionType">
+                                                        <PropertyValue Property="Property" PropertyPath="ExpectedOverallLimitAmount"/>
+                                                        <PropertyValue Property="AllowedExpressions" String="MultiValue"/>
+                                                    </Record>
+                                                    <Record Type="Capabilities.FilterExpressionRestrictionType">
+                                                        <PropertyValue Property="Property" PropertyPath="OverallLimitAmount"/>
+                                                        <PropertyValue Property="AllowedExpressions" String="MultiValue"/>
+                                                    </Record>
+                                                </Collection>
+                                            </PropertyValue>
+                                        </Record>
+                                    </Annotation>
+                                    <Annotation Term="Capabilities.UpdateRestrictions">
+                                        <Record Type="Capabilities.UpdateRestrictionsType">
+                                            <PropertyValue Property="QueryOptions">
+                                                <Record Type="Capabilities.ModificationQueryOptionsType">
+                                                    <PropertyValue Property="SelectSupported" Bool="true"/>
+                                                </Record>
+                                            </PropertyValue>
+                                        </Record>
+                                    </Annotation>
+                                </Annotations>
+                                <Annotations Target="MyService.PurchaseOrderItems/Material">
+                                    <Annotation Term="Common.IsUpperCase" Bool="true"/>
+                                    <Annotation Term="Common.Label" String="Material"/>
+                                    <Annotation Term="Common.QuickInfo" String="Material Number"/>
+                                </Annotations>
+                                <Annotations Target="MyService.PurchaseOrderItems/Plant">
+                                    <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+                                    <Annotation Term="Common.IsUpperCase" Bool="true"/>
+                                    <Annotation Term="Common.Label" String="Plant"/>
+                                    <Annotation Term="Common.Heading" String="Plnt"/>
+                                </Annotations>
+                                <Annotations Target="MyService.PurchaseOrderItems/StorageLocation">
+                                    <Annotation Term="Common.IsUpperCase" Bool="true"/>
+                                    <Annotation Term="Common.Label" String="Storage Location"/>
+                                </Annotations>
+                                <Annotations Target="MyService.PurchaseOrderItems/OrderQuantity">
+                                    <Annotation Term="Measures.Unit" Path="PurchaseOrderQuantityUnit"/>
+                                    <Annotation Term="Common.Label" String="Order Quantity"/>
+                                    <Annotation Term="Common.Heading" String="PO Quantity"/>
+                                    <Annotation Term="Common.QuickInfo" String="Purchase Order Quantity"/>
+                                </Annotations>
+                                <Annotations Target="MyService.PurchaseOrderItems/OrderPriceUnit">
+                                    <Annotation Term="Common.IsUnit" Bool="true"/>
+                                    <Annotation Term="Common.Label" String="Order Price Unit"/>
+                                    <Annotation Term="Common.Heading" String="OPU"/>
+                                    <Annotation Term="Common.QuickInfo" String="Order Price Unit (Purchasing)"/>
+                                </Annotations>
+                                <Annotations Target="MyService.PurchaseOrderItems/NetPriceAmount">
+                                    <Annotation Term="Measures.ISOCurrency" Path="DocumentCurrency"/>
+                                    <Annotation Term="Common.Label" String="Net Order Price"/>
+                                    <Annotation Term="Common.Heading" String="Net Price"/>
+                                    <Annotation Term="Common.QuickInfo" String="Net Price in Purchasing Document (in Document Currency)"/>
+                                </Annotations>
+                                <Annotations Target="MyService.Currencies">
+                                    <Annotation Term="UI.Identification">
+                                        <Collection>
+                                            <Record Type="UI.DataField">
+                                                <PropertyValue Property="Value" Path="name"/>
+                                            </Record>
+                                        </Collection>
+                                    </Annotation>
+                                </Annotations>
+                                <Annotations Target="MyService.Currencies/name">
+                                    <Annotation Term="Common.Label" String="{i18n>Name}"/>
+                                    </Annotations>
+                                    <Annotations Target="MyService.Currencies/descr">
+                                        <Annotation Term="Common.Label" String="{i18n>Description}"/>
+                                        </Annotations>
+                                        <Annotations Target="MyService.Currencies/code">
+                                            <Annotation Term="Common.Text" Path="name"/>
+                                            <Annotation Term="Common.Label" String="{i18n>CurrencyCode}"/>
+                                            </Annotations>
+                                            <Annotations Target="MyService.Currencies/symbol">
+                                                <Annotation Term="Common.Label" String="{i18n>CurrencySymbol}"/>
+                                                </Annotations>
+                                                <Annotations Target="MyService.Currencies/minorUnit">
+                                                    <Annotation Term="Common.Label" String="{i18n>CurrencyMinorUnit}"/>
+                                                    </Annotations>
+                                                    <Annotations Target="MyService.Currencies_texts/locale">
+                                                        <Annotation Term="Common.Label" String="{i18n>LanguageCode}"/>
+                                                        </Annotations>
+                                                        <Annotations Target="MyService.Currencies_texts/name">
+                                                            <Annotation Term="Common.Label" String="{i18n>Name}"/>
+                                                            </Annotations>
+                                                            <Annotations Target="MyService.Currencies_texts/descr">
+                                                                <Annotation Term="Common.Label" String="{i18n>Description}"/>
+                                                                </Annotations>
+                                                                <Annotations Target="MyService.Currencies_texts/code">
+                                                                    <Annotation Term="Common.Text" Path="name"/>
+                                                                    <Annotation Term="Common.Label" String="{i18n>CurrencyCode}"/>
+                                                                    </Annotations>
+                                                                </Schema>
+                                                            </edmx:DataServices>
+                                                        </edmx:Edmx>

@@ -1,0 +1,14 @@
+<mvc:View controllerName="project1.controller.View1"
+    xmlns:mvc="sap.ui.core.mvc" displayBlock="true"
+    xmlns="sap.m">
+    <Page id="page" title="{i18n>title}">
+       <content >
+ 
+<List id="idlst" itemPress="onNavNext">
+           <ObjectListItem id="_IDGenObjectListItem1" intro="" title="General Info" icon="sap-icon://request" press="onPress" type="Active"></ObjectListItem>
+ 
+           <ObjectListItem id="_IDGenObjectListItem2" intro="" title="TSW DETAILS" icon="sap-icon://simulate" type="Active" press="GeneralInfo"></ObjectListItem>
+</List>
+        </content>
+    </Page>
+</mvc:View>
