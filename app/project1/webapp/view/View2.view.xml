@@ -13,7 +13,21 @@
             <Label id="_IDGenLabel2" text="Company Code"/>
             </HBox>
           <HBox id="_IDGenHBox2" >
-          <Input id="_IDGenInput5" value="" showValueHelp="true" valueHelpRequest="onSelct" width="150px"></Input>
+          <Input id="_IDGenInput5" value="" showValueHelp="true" valueHelpRequest="onSelct" width="150px"
+          
+         >
+          
+          	<!-- <suggestionColumns>
+				<Column id="_IDGenColumn1">
+					<Label id="_IDGenLabel191" text="Supplier"/>
+				</Column>
+			</suggestionColumns>
+			<suggestionRows>
+				<ColumnListItem id="_IDGenColumnListItem1">
+					<Label id="_IDGenLabel102" text="{Supplier}" />
+				</ColumnListItem>
+			</suggestionRows> -->
+          </Input>
            <!-- <Input id="_IDGenInput1" value="" width="150px"/> -->
            <Select id="_IDGenSelect1" width="150px" items=
            "{ path:'/PurchaseOrders'}">
